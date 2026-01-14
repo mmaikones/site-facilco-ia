@@ -1,4 +1,6 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const API_KEY = "AIzaSyDyZZfzs42sOpYaR2Z2rmXbKlANcW42_o0"; // API Key provided by user
 
 const SYSTEM_INSTRUCTION = `Você é um Engenheiro de Vendas Sênior e Auditor de Segurança da Facilco Engenharia.
 
@@ -41,49 +43,42 @@ Sempre termine com este HTML exato:
 
 export const generateResponse = async (userPrompt: string, imageBase64?: string, mimeType?: string): Promise<string> => {
   try {
-    const apiKey = process.env.API_KEY;
-    if (!apiKey) {
-      console.error("API Key not found");
-      return "Erro de configuração: Chave de API não encontrada.";
-    }
+    const genAI = new GoogleGenerativeAI(API_KEY);
 
-    const ai = new GoogleGenAI({ apiKey });
-    
-    // Prepare contents
-    const parts: any[] = [];
-    
+    // Choose the appropriate model
+    // Note: Gemini 1.5 Flash is efficient and supports vision
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.0-flash-exp",
+      systemInstruction: SYSTEM_INSTRUCTION
+    });
+
+    // Prepare prompt parts
+    const promptParts: any[] = [userPrompt || "Analise esta imagem tecnicamente como um auditor de segurança."];
+
     // Add image if present
     if (imageBase64 && mimeType) {
-      parts.push({
+      promptParts.push({
         inlineData: {
-          mimeType: mimeType,
-          data: imageBase64
+          data: imageBase64,
+          mimeType: mimeType
         }
       });
     }
 
-    // Add text prompt (or default text if only image is sent)
-    parts.push({ 
-      text: userPrompt || "Analise esta imagem tecnicamente como um auditor de segurança. Identifique riscos, cite a Norma Regulamentadora (NR) infringida e gere o Pré-Laudo Técnico conforme suas instruções." 
-    });
+    const result = await model.generateContent(promptParts);
+    const response = await result.response;
+    const text = response.text();
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview", 
-      contents: [
-        {
-          role: "user",
-          parts: parts,
-        },
-      ],
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.2, // Lower temperature for more consistent formatting
-      },
-    });
+    return text;
 
-    return response.text || "Desculpe, não consegui analisar a solicitação.";
-  } catch (error) {
-    console.error("Gemini API Error:", error);
+  } catch (error: any) {
+    console.error("Gemini API Error Detail:", error);
+
+    // Customize error message based on common issues
+    if (error.message?.includes('API key')) {
+      return "Erro de autenticação com a IA. Por favor, verifique a chave de API.";
+    }
+
     return "Ocorreu um erro ao processar sua solicitação. Se enviou uma imagem, tente uma resolução menor ou formato diferente.";
   }
 };

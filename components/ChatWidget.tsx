@@ -20,7 +20,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
     } catch (error) {
       console.error("Error loading chat history:", error);
     }
-    
+
     return [
       {
         id: 'welcome',
@@ -33,11 +33,11 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
 
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  
+
   // Image State
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [imageMimeType, setImageMimeType] = useState<string | null>(null);
-  
+
   const chatMessagesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -109,13 +109,13 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
     };
 
     setMessages(prev => [...prev, newMessage]);
-    
+
     // Reset Input State immediately
     setInputText('');
     setSelectedImage(null);
     setImageMimeType(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
-    
+
     setIsTyping(true);
 
     try {
@@ -126,24 +126,24 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
       }
 
       const responseText = await generateResponse(userText, apiBase64, currentMime || undefined);
-      
+
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: responseText,
         isUser: false,
         timestamp: Date.now()
       };
-      
+
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
-        console.error("Error generating response", error);
-        const errorMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            text: "Desculpe, ocorreu um erro ao processar sua solicitação.",
-            isUser: false,
-            timestamp: Date.now()
-        };
-        setMessages(prev => [...prev, errorMessage]);
+      console.error("Error generating response", error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "Desculpe, ocorreu um erro ao processar sua solicitação.",
+        isUser: false,
+        timestamp: Date.now()
+      };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsTyping(false);
     }
@@ -156,7 +156,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
 
     // Clean up content for print (remove the whatsapp button link)
     const cleanContent = window.marked ? window.marked.parse(content) : content;
-    
+
     const date = new Date().toLocaleDateString('pt-BR');
 
     const htmlContent = `
@@ -220,7 +220,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
 
   const renderMessageContent = (msg: Message) => {
     const html = window.marked ? window.marked.parse(msg.text) : msg.text;
-    
+
     // Check if it's a "Pré-Laudo"
     const isReport = msg.text.includes("PRÉ-LAUDO TÉCNICO PRELIMINAR");
 
@@ -239,27 +239,27 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
             <img src={msg.image} alt="User upload" className="max-w-full h-auto max-h-48 object-cover" />
           </div>
         )}
-        
+
         {msg.text && (
-          msg.isUser 
-            ? <div>{msg.text}</div> 
+          msg.isUser
+            ? <div>{msg.text}</div>
             : (
-                <div className="relative">
-                    <div dangerouslySetInnerHTML={{ __html: html }} />
-                    {isReport && (
-                        <div className="mt-4 pt-4 border-t border-gray-200">
-                             <button 
-                                onClick={() => generatePDF(msg.text, reportImage)}
-                                className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-4 rounded transition shadow-sm uppercase tracking-wide"
-                             >
-                                <i className="fas fa-file-pdf"></i> Baixar PDF do Laudo (Oficial)
-                             </button>
-                             <p className="text-[10px] text-gray-400 text-center mt-2">
-                                *Gera um documento para aprovação de budget.
-                             </p>
-                        </div>
-                    )}
-                </div>
+              <div className="relative">
+                <div dangerouslySetInnerHTML={{ __html: html }} />
+                {isReport && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <button
+                      onClick={() => generatePDF(msg.text, reportImage)}
+                      className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-4 rounded transition shadow-sm uppercase tracking-wide"
+                    >
+                      <i className="fas fa-file-pdf"></i> Baixar PDF do Laudo (Oficial)
+                    </button>
+                    <p className="text-[10px] text-gray-400 text-center mt-2">
+                      *Gera um documento para aprovação de budget.
+                    </p>
+                  </div>
+                )}
+              </div>
             )
         )}
       </div>
@@ -269,20 +269,20 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
   // Add functionality to clear history
   const clearHistory = () => {
     if (confirm('Deseja limpar o histórico da conversa?')) {
-        localStorage.removeItem(STORAGE_KEY);
-        setMessages([{
-            id: 'welcome',
-            text: "Olá! Sou o assistente virtual da Facilco Engenharia. 🏗️\n\nPosso ajudar com:\n- Diagnóstico visual de danos (envie uma foto!)\n- Dúvidas sobre Normas (NRs)\n- Especificações de produtos\n\nComo posso ajudar sua obra hoje?",
-            isUser: false,
-            timestamp: Date.now()
-        }]);
+      localStorage.removeItem(STORAGE_KEY);
+      setMessages([{
+        id: 'welcome',
+        text: "Olá! Sou o assistente virtual da Facilco Engenharia. 🏗️\n\nPosso ajudar com:\n- Diagnóstico visual de danos (envie uma foto!)\n- Dúvidas sobre Normas (NRs)\n- Especificações de produtos\n\nComo posso ajudar sua obra hoje?",
+        isUser: false,
+        timestamp: Date.now()
+      }]);
     }
   };
 
   return (
     <>
       {/* Trigger Button */}
-      <button 
+      <button
         onClick={toggleChat}
         className={`fixed bottom-24 right-6 bg-brand-dark text-brand-yellow p-4 rounded-full shadow-2xl hover:bg-gray-800 transition z-40 border-2 border-brand-yellow group ${isOpen ? 'hidden' : 'block'}`}
       >
@@ -293,10 +293,10 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
       </button>
 
       {/* Chat Window */}
-      <div 
+      <div
         className={`fixed bottom-6 right-6 w-96 max-w-[90vw] h-[600px] bg-white rounded-lg shadow-2xl z-50 transform transition-transform duration-300 flex flex-col border border-gray-200 overflow-hidden font-sans ${isOpen ? 'translate-y-0' : 'translate-y-[120%]'}`}
       >
-        
+
         {/* Chat Header */}
         <div className="bg-brand-dark p-4 flex justify-between items-center text-white">
           <div className="flex items-center gap-3">
@@ -308,19 +308,19 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
               </span>
             </div>
             <div>
-              <h3 className="font-bold text-sm font-display tracking-wider">Diagnóstico IA</h3>
+              <h3 className="font-bold text-sm font-display tracking-wider">Agente Facilco</h3>
               <div className="flex items-center gap-1">
-                <span className="text-xs text-gray-400">Gemini Vision Ativado</span>
+                <span className="text-xs text-gray-400">Online</span>
               </div>
             </div>
           </div>
           <div className="flex gap-2">
-             <button onClick={clearHistory} className="text-gray-400 hover:text-white transition" title="Limpar Histórico">
-                <i className="fas fa-trash-alt text-xs"></i>
-             </button>
-             <button onClick={toggleChat} className="text-gray-400 hover:text-white transition">
-                <i className="fas fa-times"></i>
-             </button>
+            <button onClick={clearHistory} className="text-gray-400 hover:text-white transition" title="Limpar Histórico">
+              <i className="fas fa-trash-alt text-xs"></i>
+            </button>
+            <button onClick={toggleChat} className="text-gray-400 hover:text-white transition">
+              <i className="fas fa-times"></i>
+            </button>
           </div>
         </div>
 
@@ -328,11 +328,10 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
         <div id="chatMessages" ref={chatMessagesRef} className="flex-1 overflow-y-auto p-4 bg-gray-50 chat-scroll flex flex-col gap-3">
           {messages.map((msg) => (
             <div key={msg.id} className={`max-w-[85%] chat-message ${msg.isUser ? 'self-end' : 'self-start'}`}>
-              <div className={`p-3 rounded-lg shadow-sm text-sm ${
-                msg.isUser 
-                  ? 'bg-brand-dark text-white rounded-tr-none' 
+              <div className={`p-3 rounded-lg shadow-sm text-sm ${msg.isUser
+                  ? 'bg-brand-dark text-white rounded-tr-none'
                   : 'bg-white border border-gray-100 text-gray-700 rounded-tl-none prose prose-sm max-w-none'
-              }`}>
+                }`}>
                 {renderMessageContent(msg)}
               </div>
             </div>
@@ -351,26 +350,26 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
 
           {/* Quick Action: Analyze Problem */}
           {messages.length < 3 && !selectedImage && (
-             <div className="self-center my-4">
-                <button 
-                  onClick={() => fileInputRef.current?.click()}
-                  className="bg-white border border-brand-yellow text-brand-dark hover:bg-brand-yellow hover:text-white transition rounded-full px-4 py-2 text-xs font-bold shadow-md flex items-center gap-2"
-                >
-                  <i className="fas fa-camera text-brand-yellow group-hover:text-white"></i>
-                  Analisar meu Problema (Foto)
-                </button>
-             </div>
+            <div className="self-center my-4">
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="bg-white border border-brand-yellow text-brand-dark hover:bg-brand-yellow hover:text-white transition rounded-full px-4 py-2 text-xs font-bold shadow-md flex items-center gap-2"
+              >
+                <i className="fas fa-camera text-brand-yellow group-hover:text-white"></i>
+                Analisar meu Problema (Foto)
+              </button>
+            </div>
           )}
         </div>
 
         {/* Chat Input Area */}
         <div className="p-4 bg-white border-t border-gray-100">
-          
+
           {/* Image Preview */}
           {selectedImage && (
             <div className="mb-3 relative inline-block">
               <img src={selectedImage} alt="Preview" className="h-20 w-auto rounded border border-gray-300 shadow-sm" />
-              <button 
+              <button
                 onClick={removeImage}
                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-md hover:bg-red-600 transition"
               >
@@ -380,10 +379,10 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
           )}
 
           <form onSubmit={handleSendMessage} className="relative flex items-center gap-2">
-            
+
             {/* Hidden File Input */}
-            <input 
-              type="file" 
+            <input
+              type="file"
               ref={fileInputRef}
               onChange={handleFileSelect}
               accept="image/*"
@@ -391,7 +390,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
             />
 
             {/* Attachment Button */}
-            <button 
+            <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
               className="text-gray-400 hover:text-brand-dark transition p-2"
@@ -400,8 +399,8 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
               <i className="fas fa-camera"></i>
             </button>
 
-            <input 
-              type="text" 
+            <input
+              type="text"
               ref={inputRef}
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
@@ -409,16 +408,16 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ isOpen, toggleChat }) => {
               className="flex-1 bg-gray-100 text-gray-800 text-sm rounded-full pl-4 pr-10 py-3 focus:outline-none focus:ring-2 focus:ring-brand-yellow transition"
               disabled={isTyping}
             />
-            
-            <button 
-              type="submit" 
+
+            <button
+              type="submit"
               className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-brand-yellow text-brand-dark rounded-full flex items-center justify-center hover:bg-yellow-500 transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isTyping || (!inputText.trim() && !selectedImage)}
             >
               <i className="fas fa-paper-plane text-xs"></i>
             </button>
           </form>
-          <p className="text-[10px] text-gray-400 text-center mt-2">IA com visão computacional (Gemini).</p>
+          <p className="text-[10px] text-gray-400 text-center mt-2">IA com visão computacional.</p>
         </div>
       </div>
     </>

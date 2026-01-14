@@ -1,19 +1,52 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-const specialties = [
+interface SpecialtyItem {
+  title: string;
+  image?: string;
+  images?: string[];
+}
+
+const specialties: SpecialtyItem[] = [
   {
     title: "Sinalização e sensores",
-    image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+    image: "/sinalizacao-sensores.png"
   },
   {
     title: "Delimitadores",
-    image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+    image: "/delimitadores.jpg"
   },
   {
     title: "Escada marinheiro",
-    image: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+    images: [
+      "/escada-marinheiro-1.jpg",
+      "/escada-marinheiro-2.png"
+    ]
   }
 ];
+
+const Carousel: React.FC<{ images: string[], title: string }> = ({ images, title }) => {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
+  return (
+    <div className="w-full h-full relative group-hover:scale-110 transition duration-700">
+      {images.map((img, index) => (
+        <img
+          key={index}
+          src={img}
+          alt={`${title} - Imagem ${index + 1}`}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${current === index ? 'opacity-100' : 'opacity-0'}`}
+        />
+      ))}
+    </div>
+  );
+};
 
 const Specialties: React.FC = () => {
   return (
@@ -33,16 +66,21 @@ const Specialties: React.FC = () => {
           {specialties.map((item, index) => (
             <div key={index} className="group cursor-pointer">
               <div className="relative overflow-hidden rounded-lg shadow-lg aspect-[3/4] mb-4">
-                <img 
-                  src={item.image} 
-                  alt={item.title} 
-                  className="w-full h-full object-cover transition duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
-                
+                {item.images ? (
+                  <Carousel images={item.images} title={item.title} />
+                ) : (
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition duration-700 group-hover:scale-110"
+                  />
+                )}
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity z-10"></div>
+
                 {/* Title overlay for mobile/aesthetic or simple bottom text */}
-                <div className="absolute bottom-0 left-0 p-6 w-full">
-                   <div className="w-10 h-1 bg-brand-yellow mb-2 transform origin-left group-hover:scale-x-150 transition duration-300"></div>
+                <div className="absolute bottom-0 left-0 p-6 w-full z-20">
+                  <div className="w-10 h-1 bg-brand-yellow mb-2 transform origin-left group-hover:scale-x-150 transition duration-300"></div>
                 </div>
               </div>
               <h3 className="text-2xl font-display font-bold text-brand-dark group-hover:text-brand-yellow transition-colors uppercase tracking-wide">

@@ -31,18 +31,12 @@ const Header: React.FC<HeaderProps> = ({ toggleChat }) => {
           {/* Logo */}
           <a href="#" className="flex items-center gap-2">
             <img 
-                src="Imagem 06-01-2026 às 11.09.png" 
+                src="/logo.png" 
                 alt="Facilco Engenharia" 
-                className="h-16 w-auto object-contain hidden" 
-                onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    target.nextElementSibling?.classList.remove('hidden');
-                    target.nextElementSibling?.classList.add('flex');
-                }}
+                className="h-16 w-auto object-contain" 
             />
             {/* Fallback Text Logo */}
-            <div className="flex items-center gap-2 text-2xl font-display font-bold text-brand-dark tracking-tighter uppercase">
+            <div className="hidden flex items-center gap-2 text-2xl font-display font-bold text-brand-dark tracking-tighter uppercase">
               <i className="fas fa-industry text-brand-yellow text-3xl"></i>
               <div>
                 FACILCO <br />

@@ -3,9 +3,8 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import Catalog from './components/Catalog';
 import Specialties from './components/Specialties';
-import Safety from './components/Safety';
-import Weighbridge from './components/Weighbridge';
-import IndustrialProjects from './components/IndustrialProjects';
+import SolutionsCarousel from './components/SolutionsCarousel';
+import ClientsCarousel from './components/ClientsCarousel';
 import Services from './components/Services';
 import About from './components/About';
 import Footer from './components/Footer';
@@ -24,10 +23,9 @@ const App: React.FC = () => {
       <Hero toggleChat={toggleChat} />
       <Catalog />
       <Services />
+      <ClientsCarousel />
       <Specialties />
-      <Safety />
-      <Weighbridge />
-      <IndustrialProjects />
+      <SolutionsCarousel />
       <About />
       <Footer />
       <ChatWidget isOpen={isChatOpen} toggleChat={toggleChat} />

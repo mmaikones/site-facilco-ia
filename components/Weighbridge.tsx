@@ -42,82 +42,76 @@ const Weighbridge: React.FC = () => {
   }, []);
 
   return (
-    <section className="py-12 md:py-20 bg-white border-t border-gray-100">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row-reverse items-center gap-10 lg:gap-16">
-          
-          {/* Content Side (Right) */}
-          <div className="lg:w-1/2 order-2 lg:order-1">
-            <span className="text-brand-yellow font-bold uppercase tracking-widest text-sm mb-2 block">Infraestrutura Logística</span>
-            <h2 className="text-3xl md:text-5xl font-display font-bold text-brand-dark mb-6">
-              Balança Rodoviária
-            </h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-8 text-left md:text-justify">
-              A construção de uma balança rodoviária é um processo que envolve diversas etapas, desde o planejamento inicial até a instalação e manutenção. A balança rodoviária é um equipamento essencial para o controle de pesos de veículos, especialmente em estradas e rodovias, garantindo que os limites de peso sejam respeitados para evitar danos à infraestrutura e garantir a segurança nas vias.
-            </p>
+    <div className="w-full max-w-7xl mx-auto">
+      <div className="flex flex-col lg:flex-row-reverse items-center gap-10 lg:gap-16">
 
-            <div className="space-y-6">
-              {steps.map((step, index) => (
-                <div key={index} className="flex gap-4 group">
-                  <div className="mt-1 min-w-[32px] h-8 flex items-center justify-center bg-brand-light rounded-full text-brand-dark font-bold text-sm group-hover:bg-brand-yellow transition-colors flex-shrink-0">
-                    {index + 1}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-brand-dark text-lg">{step.title}</h4>
-                    <p className="text-gray-500 text-sm">{step.description}</p>
-                  </div>
+        {/* Content Side (Right) */}
+        <div className="lg:w-1/2 order-2 lg:order-1">
+          <span className="text-brand-yellow font-bold uppercase tracking-widest text-sm mb-2 block">Infraestrutura Logística</span>
+          <h2 className="text-3xl md:text-5xl font-display font-bold text-brand-dark mb-6">
+            Balança Rodoviária
+          </h2>
+          <p className="text-gray-600 text-lg leading-relaxed mb-8 text-left md:text-justify">
+            A construção de uma balança rodoviária é um processo que envolve diversas etapas, desde o planejamento inicial até a instalação e manutenção. A balança rodoviária é um equipamento essencial para o controle de pesos de veículos, especialmente em estradas e rodovias, garantindo que os limites de peso sejam respeitados para evitar danos à infraestrutura e garantir a segurança nas vias.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {steps.map((step, index) => (
+              <div key={index} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-brand-yellow transition group">
+                <div className="w-8 h-8 flex items-center justify-center bg-brand-light rounded-full text-brand-dark font-bold text-sm group-hover:bg-brand-yellow transition-colors mb-2">
+                  {index + 1}
                 </div>
-              ))}
-            </div>
-            
-            <div className="mt-10">
-              <a href="#contato" className="flex md:inline-flex justify-center items-center gap-2 border-2 border-brand-dark text-brand-dark px-8 py-3 rounded hover:bg-brand-dark hover:text-white transition font-display uppercase font-bold tracking-wide w-full md:w-auto">
-                Solicitar Cotação de Obra <i className="fas fa-file-invoice-dollar"></i>
-              </a>
-            </div>
-          </div>
-
-          {/* Carousel Side (Left) */}
-          <div className="lg:w-1/2 w-full order-1 lg:order-2">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-video md:aspect-[4/3] bg-gray-200">
-              {carouselImages.map((img, index) => (
-                <div 
-                  key={index}
-                  className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                    index === currentSlide ? 'opacity-100' : 'opacity-0'
-                  }`}
-                >
-                  <img 
-                    src={img} 
-                    alt={`Construção de Balança - Etapa ${index + 1}`} 
-                    className="w-full h-full object-cover"
-                  />
-                  {/* Overlay Gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/40 to-transparent"></div>
-                </div>
-              ))}
-
-              {/* Indicators */}
-              <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
-                {carouselImages.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      currentSlide === index ? 'w-8 bg-brand-yellow' : 'w-2 bg-white/50 hover:bg-white'
-                    }`}
-                    aria-label={`Go to slide ${index + 1}`}
-                  />
-                ))}
+                <h4 className="font-bold text-brand-dark text-base mb-1">{step.title}</h4>
+                <p className="text-gray-500 text-xs leading-relaxed">{step.description}</p>
               </div>
-            </div>
-             {/* Decorative Element */}
-             <div className="hidden lg:block absolute -bottom-4 -left-4 w-24 h-24 bg-brand-yellow z-0 -z-10 rounded-bl-3xl"></div>
+            ))}
           </div>
 
+          <div className="mt-10">
+            <a href="#contato" className="flex md:inline-flex justify-center items-center gap-2 border-2 border-brand-dark text-brand-dark px-8 py-3 rounded hover:bg-brand-dark hover:text-white transition font-display uppercase font-bold tracking-wide w-full md:w-auto">
+              Solicitar Cotação de Obra <i className="fas fa-file-invoice-dollar"></i>
+            </a>
+          </div>
         </div>
+
+        {/* Carousel Side (Left) */}
+        <div className="lg:w-1/2 w-full order-1 lg:order-2">
+          <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl aspect-square bg-gray-200 border-4 border-white">
+            {carouselImages.map((img, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0'
+                  }`}
+              >
+                <img
+                  src={img}
+                  alt={`Construção de Balança - Etapa ${index + 1}`}
+                  className="w-full h-full object-cover rounded-[5px]"
+                />
+                {/* Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/40 to-transparent"></div>
+              </div>
+            ))}
+
+            {/* Indicators */}
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
+              {carouselImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`h-2 rounded-full transition-all duration-300 ${currentSlide === index ? 'w-8 bg-brand-yellow' : 'w-2 bg-white/50 hover:bg-white'
+                    }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+          {/* Decorative Element */}
+          <div className="hidden lg:block absolute -bottom-4 -left-4 w-24 h-24 bg-brand-yellow z-0 -z-10 rounded-bl-3xl"></div>
+        </div>
+
       </div>
-    </section>
+    </div>
   );
 };
 
